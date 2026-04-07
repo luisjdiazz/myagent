@@ -239,7 +239,7 @@ export async function* streamChatCompletion(
 export async function generateImage(
   apiKey: string,
   prompt: string,
-  size: string = "1024x1024"
+  size: string = "1:1"
 ): Promise<{ taskId: string } | { error: string }> {
   const response = await fetch(
     "https://api.kie.ai/api/v1/gpt4o-image/generate",
@@ -253,26 +253,23 @@ export async function generateImage(
     }
   )
 
-  if (!response.ok) {
-    const text = await response.text()
-    return { error: `Image generation failed: ${text}` }
+  const data = await response.json()
+
+  if (data.code !== 200) {
+    return { error: data.msg || data.message || "Image generation failed" }
   }
 
-  const data = await response.json()
-  if (data.taskId) {
-    return { taskId: data.taskId }
+  const taskId = data.data?.taskId
+  if (taskId) {
+    return { taskId }
   }
-  return { error: data.message ?? "Failed to start image generation" }
+  return { error: "No task ID returned from image generation" }
 }
 
 export async function queryImageTask(
   apiKey: string,
   taskId: string
-): Promise<{
-  status: "generating" | "success" | "failed"
-  resultUrls?: string[]
-  error?: string
-}> {
+): Promise<Record<string, unknown>> {
   const response = await fetch(
     `https://api.kie.ai/api/v1/gpt4o-image/record-info?taskId=${taskId}`,
     {
@@ -283,20 +280,10 @@ export async function queryImageTask(
   )
 
   if (!response.ok) {
-    return { status: "failed", error: `Query failed: ${response.status}` }
+    return { error: `Query failed: ${response.status}` }
   }
 
-  const data = await response.json()
-
-  // successFlag: 0=generating, 1=success, 2=failed
-  switch (data.successFlag) {
-    case 0:
-      return { status: "generating" }
-    case 1:
-      return { status: "success", resultUrls: data.resultUrls }
-    case 2:
-      return { status: "failed", error: data.message ?? "Image generation failed" }
-    default:
-      return { status: "generating" }
-  }
+  // Return the raw response so the frontend can parse it
+  // Format: { data: { successFlag: 0|1|2, progress: "0.5", response: { resultUrls: [...] } } }
+  return response.json()
 }

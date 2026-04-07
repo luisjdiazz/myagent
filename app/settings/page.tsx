@@ -145,18 +145,18 @@ export default function SettingsPage() {
         <div className="rounded-xl border border-app-border bg-app-card p-5">
           <h2 className="mb-2 text-sm font-semibold text-white">KIE.AI API Key</h2>
           <p className="mb-4 text-xs text-app-muted">
-            Your API key is stored securely. A default platform key is available, but you can use your own for unlimited access.
+            Your API key is required to use the platform. Each user must add their own KIE.AI API key.
           </p>
 
           <div className="mb-2 flex items-center gap-2">
             <span className="text-xs text-app-muted">Status:</span>
             {user?.hasApiKey ? (
               <span className="rounded-full bg-green-500/20 px-2 py-0.5 text-xs text-green-400">
-                Custom Key
+                Configured
               </span>
             ) : (
-              <span className="rounded-full bg-blue-500/20 px-2 py-0.5 text-xs text-blue-400">
-                Using Platform Key
+              <span className="rounded-full bg-yellow-500/20 px-2 py-0.5 text-xs text-yellow-400">
+                Not Set — Required
               </span>
             )}
           </div>

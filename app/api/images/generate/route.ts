@@ -26,9 +26,12 @@ export async function POST(req: NextRequest) {
       return Response.json({ error: "User not found" }, { status: 404 })
     }
 
-    const apiKey = user.kieApiKey || process.env.KIE_AI_API_KEY
+    const apiKey = user.kieApiKey
     if (!apiKey) {
-      return Response.json({ error: "No API key configured" }, { status: 400 })
+      return Response.json(
+        { error: "No API key configured. Go to Settings to add your KIE.AI API key." },
+        { status: 400 }
+      )
     }
 
     const { prompt, size } = (await req.json()) as {

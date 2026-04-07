@@ -68,7 +68,7 @@ export default function NewChatPage() {
 
         {user && !user.hasApiKey && (
           <div className="mb-6 rounded-xl border border-yellow-500/30 bg-yellow-500/10 px-4 py-3 text-center text-sm text-yellow-300">
-            Configure your KIE.AI API key for personal usage.{" "}
+            You need to configure your KIE.AI API key to start chatting.{" "}
             <button
               onClick={() => router.push("/settings")}
               className="font-medium underline hover:text-yellow-200"
