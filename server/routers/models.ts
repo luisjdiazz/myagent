@@ -2,6 +2,7 @@ import { createTRPCRouter, publicProcedure } from "../trpc"
 import type { ModelInfo } from "@/types"
 
 const MODELS: ModelInfo[] = [
+  // OpenAI
   {
     id: "gpt-5-2",
     name: "GPT-5.2",
@@ -9,6 +10,7 @@ const MODELS: ModelInfo[] = [
     cost: "~$0.05/msg",
     status: "stable",
   },
+  // Anthropic
   {
     id: "claude-opus-4-6",
     name: "Claude Opus 4.6",
@@ -44,6 +46,7 @@ const MODELS: ModelInfo[] = [
     cost: "~$0.005/msg",
     status: "intermittent",
   },
+  // Google
   {
     id: "gemini-3.1-pro",
     name: "Gemini 3.1 Pro",
@@ -78,7 +81,9 @@ const MODELS: ModelInfo[] = [
     provider: "Google",
     cost: "~$0.01/msg",
     status: "stable",
+    recommended: true,
   },
+  // DeepSeek
   {
     id: "deepseek-chat",
     name: "DeepSeek V3",
@@ -93,10 +98,11 @@ const MODELS: ModelInfo[] = [
     cost: "~$0.01/msg",
     status: "intermittent",
   },
+  // Image Generation
   {
     id: "gpt-image",
     name: "GPT Image (4o)",
-    provider: "OpenAI",
+    provider: "Image Generation",
     type: "image",
     cost: "~$0.04/image",
     status: "stable",
@@ -104,8 +110,17 @@ const MODELS: ModelInfo[] = [
   {
     id: "nano-banana",
     name: "Nano Banana",
-    provider: "KIE.AI",
-    cost: "~$0.001/msg",
+    provider: "Image Generation",
+    type: "image",
+    cost: "~$0.001/image",
+    status: "stable",
+  },
+  {
+    id: "nano-banana-pro",
+    name: "Nano Banana Pro",
+    provider: "Image Generation",
+    type: "image",
+    cost: "~$0.01/image",
     status: "stable",
   },
 ]

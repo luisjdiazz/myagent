@@ -18,6 +18,7 @@ export default function ConversationPage() {
     streamingContent,
     isStreaming,
     error,
+    conversationTitle,
     loadConversation,
     sendMessage,
     stopGeneration,
@@ -53,6 +54,13 @@ export default function ConversationPage() {
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
+      {/* Conversation title */}
+      {conversationTitle && conversationTitle !== "New Chat" && (
+        <div className="border-b border-white/[0.04] px-4 py-2">
+          <p className="mx-auto max-w-[720px] truncate text-[13px] text-zinc-500">{conversationTitle}</p>
+        </div>
+      )}
+
       {/* Chat messages */}
       <ChatArea
         messages={messages}

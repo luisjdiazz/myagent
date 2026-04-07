@@ -66,13 +66,13 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // 5. Resolve API key: user must have their own key (multi-tenant)
-    const apiKey = user.kieApiKey
+    // 5. Resolve API key: user key with platform fallback
+    const apiKey = user.kieApiKey || process.env.KIE_AI_API_KEY
     if (!apiKey) {
       return new Response(
         JSON.stringify({
           error:
-            "No API key configured. Go to Settings to add your KIE.AI API key.",
+            "No API key available. Contact the administrator.",
         }),
         { status: 400 }
       )

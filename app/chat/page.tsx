@@ -1,12 +1,26 @@
 "use client"
 
-import { FormEvent, useState } from "react"
+import { FormEvent, useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/components/auth/AuthProvider"
 import { useModels } from "@/hooks/use-models"
 import { ModelSelector } from "@/components/chat/ModelSelector"
+import { Onboarding } from "@/components/chat/Onboarding"
 
 export default function NewChatPage() {
+  const [showOnboarding, setShowOnboarding] = useState(false)
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && !localStorage.getItem("myagent_onboarded")) {
+      setShowOnboarding(true)
+    }
+  }, [])
+
+  function dismissOnboarding() {
+    localStorage.setItem("myagent_onboarded", "true")
+    setShowOnboarding(false)
+  }
+
   const { user } = useAuth()
   const { models, loading: modelsLoading } = useModels()
   const router = useRouter()
@@ -52,6 +66,10 @@ export default function NewChatPage() {
       setError(err instanceof Error ? err.message : "Network error")
       setSending(false)
     }
+  }
+
+  if (showOnboarding) {
+    return <Onboarding onDismiss={dismissOnboarding} />
   }
 
   return (

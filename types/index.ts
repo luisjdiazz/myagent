@@ -5,6 +5,7 @@ export interface ModelInfo {
   type?: "image"
   cost?: string
   status?: "stable" | "intermittent"
+  recommended?: boolean
 }
 
 export interface Message {

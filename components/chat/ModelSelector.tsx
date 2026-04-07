@@ -66,6 +66,7 @@ export function ModelSelector({ models, value, onChange, compact }: ModelSelecto
                   >
                     <span className="flex items-center gap-2 text-[13px]">
                       {m.name}
+                      {m.recommended && <span className="rounded-full bg-green-500/10 px-1.5 py-0.5 text-[9px] text-green-400">recommended</span>}
                       {m.status === "intermittent" && <span className="rounded-full bg-yellow-500/10 px-1.5 py-0.5 text-[9px] text-yellow-500/80">unstable</span>}
                       {m.type === "image" && <span className="rounded-full bg-purple-500/10 px-1.5 py-0.5 text-[9px] text-purple-400/80">image</span>}
                     </span>

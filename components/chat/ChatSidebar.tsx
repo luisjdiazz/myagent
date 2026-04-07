@@ -57,7 +57,11 @@ export function ChatSidebar({
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editTitle, setEditTitle] = useState("")
   const [menuId, setMenuId] = useState<string | null>(null)
-  const groups = groupByDate(conversations)
+  const [search, setSearch] = useState("")
+  const filtered = search.trim()
+    ? conversations.filter(c => c.title.toLowerCase().includes(search.toLowerCase()))
+    : conversations
+  const groups = groupByDate(filtered)
 
   function startRename(c: Conversation) {
     setEditingId(c.id)
@@ -101,6 +105,17 @@ export function ChatSidebar({
           </svg>
           New chat
         </button>
+      </div>
+
+      {/* Search */}
+      <div className="px-3 pb-2">
+        <input
+          type="text"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder="Search chats..."
+          className="w-full rounded-lg bg-white/[0.03] border border-white/[0.06] px-3 py-2 text-[13px] text-zinc-300 placeholder-zinc-600 outline-none focus:border-indigo-400/30 transition-colors"
+        />
       </div>
 
       {/* Conversation list */}
