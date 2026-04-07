@@ -21,11 +21,11 @@ export function useChat(conversationId: string | null) {
 
   const loadConversation = useCallback(async (id: string) => {
     try {
-      const url = `/api/trpc/conversations.getById?input=${encodeURIComponent(JSON.stringify({ json: { id } }))}`
+      const url = `/api/trpc/conversations.getById?input=${encodeURIComponent(JSON.stringify({ id }))}`
       const res = await fetch(url)
       if (res.ok) {
         const data = await res.json()
-        const conv = data?.result?.data?.json ?? data?.result?.data
+        const conv = data?.result?.data
         if (conv) {
           setMessages(conv.messages || [])
           setConversationTitle(conv.title)

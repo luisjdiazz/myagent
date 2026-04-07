@@ -13,7 +13,7 @@ export function useModels() {
         const res = await fetch("/api/trpc/models.list")
         if (res.ok) {
           const data = await res.json()
-          const result = data?.result?.data?.json ?? data?.result?.data
+          const result = data?.result?.data
           setModels(result || [])
         }
       } catch {

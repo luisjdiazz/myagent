@@ -14,18 +14,18 @@ interface Conversation {
 function trpcQuery(proc: string, input?: unknown): string {
   const base = `/api/trpc/${proc}`
   if (input === undefined) return base
-  return `${base}?input=${encodeURIComponent(JSON.stringify({ json: input }))}`
+  return `${base}?input=${encodeURIComponent(JSON.stringify(input))}`
 }
 
 async function trpcMutate(proc: string, input: unknown) {
   const res = await fetch(`/api/trpc/${proc}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ json: input }),
+    body: JSON.stringify(input),
   })
   const data = await res.json()
   if (data?.error) throw new Error(data.error.message || "tRPC error")
-  return data?.result?.data?.json ?? data?.result?.data
+  return data?.result?.data
 }
 
 export function useConversations() {
@@ -37,7 +37,7 @@ export function useConversations() {
       const res = await fetch(trpcQuery("conversations.list", { limit: 50, offset: 0 }))
       if (res.ok) {
         const data = await res.json()
-        const result = data?.result?.data?.json ?? data?.result?.data
+        const result = data?.result?.data
         setConversations(result || [])
       }
     } catch {
