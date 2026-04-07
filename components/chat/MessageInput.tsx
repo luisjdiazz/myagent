@@ -57,16 +57,28 @@ export function MessageInput({ onSend, disabled, isStreaming, onStop }: MessageI
       const SR = window.SpeechRecognition || window.webkitSpeechRecognition
       if (!SR) return
       const recognition = new SR()
-      recognition.continuous = false
+      recognition.continuous = true
       recognition.interimResults = true
-      recognition.lang = ""
+      // Use browser language so it doesn't confuse Spanish/English
+      recognition.lang = navigator.language || "en-US"
+      let finalTranscript = ""
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       recognition.onresult = (e: any) => {
-        let t = ""
-        for (let i = 0; i < e.results.length; i++) t += e.results[i][0].transcript
-        setText(t)
+        let interim = ""
+        for (let i = 0; i < e.results.length; i++) {
+          if (e.results[i].isFinal) {
+            finalTranscript += e.results[i][0].transcript + " "
+          } else {
+            interim += e.results[i][0].transcript
+          }
+        }
+        setText(finalTranscript + interim)
       }
-      recognition.onend = () => setIsListening(false)
+      recognition.onend = () => {
+        // Only clear listening if we intentionally stopped
+        if (recognitionRef.current === null) return
+        setIsListening(false)
+      }
       recognition.onerror = () => setIsListening(false)
       recognitionRef.current = recognition
       recognition.start()
@@ -77,7 +89,9 @@ export function MessageInput({ onSend, disabled, isStreaming, onStop }: MessageI
   }
 
   function stopListening() {
-    recognitionRef.current?.stop()
+    const rec = recognitionRef.current
+    recognitionRef.current = null
+    rec?.stop()
     setIsListening(false)
   }
 
@@ -160,7 +174,7 @@ export function MessageInput({ onSend, disabled, isStreaming, onStop }: MessageI
           className="min-h-[36px] max-h-[150px] flex-1 resize-none bg-transparent text-[15px] leading-snug text-white placeholder-gray-500 outline-none sm:text-sm"
         />
 
-        {/* Mic or Send or Stop */}
+        {/* Right button: Stop streaming > Stop recording + Send > Send > Mic */}
         {isStreaming ? (
           <button
             type="button"
@@ -169,6 +183,32 @@ export function MessageInput({ onSend, disabled, isStreaming, onStop }: MessageI
           >
             <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2" /></svg>
           </button>
+        ) : isListening ? (
+          /* While recording: show stop mic button + send button */
+          <div className="flex shrink-0 gap-1.5">
+            <button
+              type="button"
+              onClick={stopListening}
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-red-500 text-white transition active:scale-95"
+              title="Stop recording"
+            >
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 016 0v8.25a3 3 0 01-3 3z" />
+              </svg>
+            </button>
+            {hasContent && (
+              <button
+                type="button"
+                onClick={(e) => { stopListening(); handleSubmit(e as unknown as FormEvent) }}
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-500 text-white transition hover:bg-indigo-400 active:scale-95"
+                title="Stop & send"
+              >
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" />
+                </svg>
+              </button>
+            )}
+          </div>
         ) : hasContent ? (
           <button
             type="button"
@@ -183,11 +223,9 @@ export function MessageInput({ onSend, disabled, isStreaming, onStop }: MessageI
         ) : (
           <button
             type="button"
-            onClick={isListening ? stopListening : startListening}
+            onClick={startListening}
             disabled={disabled}
-            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition active:scale-95 disabled:opacity-30 ${
-              isListening ? "bg-red-500 text-white" : "text-gray-400 hover:text-white"
-            }`}
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-gray-400 transition hover:text-white active:scale-95 disabled:opacity-30"
           >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 016 0v8.25a3 3 0 01-3 3z" />
