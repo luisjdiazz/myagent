@@ -1,6 +1,6 @@
 "use client"
 
-import { FormEvent, KeyboardEvent, useRef, useState } from "react"
+import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react"
 
 interface Attachment {
   url: string
@@ -48,9 +48,17 @@ export function MessageInput({ onSend, disabled, isStreaming, onStop }: MessageI
     const el = textareaRef.current
     if (el) {
       el.style.height = "auto"
-      el.style.height = Math.min(el.scrollHeight, 150) + "px"
+      // Allow more height while recording so user can read full transcription
+      const maxH = isListening ? 300 : 150
+      el.style.height = Math.min(el.scrollHeight, maxH) + "px"
     }
   }
+
+  // Auto-resize when text changes from voice transcription
+  useEffect(() => {
+    autoResize()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [text, isListening])
 
   // --- Voice (Web Speech API) ---
   function startListening() {
@@ -185,7 +193,7 @@ export function MessageInput({ onSend, disabled, isStreaming, onStop }: MessageI
           disabled={disabled}
           placeholder="Message..."
           rows={1}
-          className="min-h-[36px] max-h-[150px] flex-1 resize-none bg-transparent text-[14px] leading-relaxed text-zinc-100 placeholder-zinc-600 outline-none"
+          className="min-h-[36px] flex-1 resize-none bg-transparent text-[14px] leading-relaxed text-zinc-100 placeholder-zinc-600 outline-none"
         />
 
         {/* Language toggle pill */}
