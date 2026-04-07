@@ -29,10 +29,10 @@ export default function NewChatPage() {
       const res = await fetch("/api/trpc/conversations.create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ model }),
+        body: JSON.stringify({ json: { model } }),
       })
       const data = await res.json()
-      const conv = data?.result?.data
+      const conv = data?.result?.data?.json ?? data?.result?.data
       if (conv) {
         router.push(`/chat/${conv.id}?msg=${encodeURIComponent(text)}`)
       }

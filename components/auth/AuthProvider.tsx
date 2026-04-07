@@ -41,13 +41,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const fetchProfile = useCallback(async () => {
     try {
-      const res = await fetch("/api/trpc/user.me", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      })
+      const res = await fetch("/api/trpc/user.me")
       if (res.ok) {
         const data = await res.json()
-        const profile = data?.result?.data
+        const profile = data?.result?.data?.json ?? data?.result?.data
         if (profile) {
           setUser({
             id: profile.id,

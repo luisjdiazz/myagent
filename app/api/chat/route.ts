@@ -34,14 +34,15 @@ export async function POST(req: NextRequest) {
 
     // 3. Parse request
     const body = await req.json()
-    const { conversationId, content } = body as {
+    const { conversationId, message: content, model: modelOverride } = body as {
       conversationId: string
-      content: string
+      message: string
+      model?: string
     }
 
     if (!conversationId || !content) {
       return new Response(
-        JSON.stringify({ error: "conversationId and content are required" }),
+        JSON.stringify({ error: "conversationId and message are required" }),
         { status: 400 }
       )
     }
@@ -96,7 +97,18 @@ export async function POST(req: NextRequest) {
       content: m.content,
     }))
 
-    // 8. Stream from KIE.AI
+    // 8. Resolve model: request override > conversation model
+    const activeModel = modelOverride || conversation.model
+
+    // Update conversation model if overridden
+    if (modelOverride && modelOverride !== conversation.model) {
+      await db
+        .update(conversations)
+        .set({ model: modelOverride })
+        .where(eq(conversations.id, conversationId))
+    }
+
+    // 9. Stream from KIE.AI
     const encoder = new TextEncoder()
     let fullResponse = ""
     let totalTokens: number | null = null
@@ -106,7 +118,7 @@ export async function POST(req: NextRequest) {
         try {
           for await (const chunk of streamChatCompletion(
             apiKey,
-            conversation.model,
+            activeModel,
             apiMessages,
             conversation.systemPrompt
           )) {
@@ -141,7 +153,7 @@ export async function POST(req: NextRequest) {
                   conversationId,
                   role: "assistant",
                   content: fullResponse,
-                  model: conversation.model,
+                  model: activeModel,
                   tokensUsed: totalTokens,
                 })
 

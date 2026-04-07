@@ -11,16 +11,34 @@ interface Conversation {
   messageCount: number
 }
 
+function trpcQuery(proc: string, input?: unknown): string {
+  const base = `/api/trpc/${proc}`
+  if (input === undefined) return base
+  return `${base}?input=${encodeURIComponent(JSON.stringify({ json: input }))}`
+}
+
+async function trpcMutate(proc: string, input: unknown) {
+  const res = await fetch(`/api/trpc/${proc}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ json: input }),
+  })
+  const data = await res.json()
+  if (data?.error) throw new Error(data.error.message || "tRPC error")
+  return data?.result?.data?.json ?? data?.result?.data
+}
+
 export function useConversations() {
   const [conversations, setConversations] = useState<Conversation[]>([])
   const [loading, setLoading] = useState(true)
 
   const fetchConversations = useCallback(async () => {
     try {
-      const res = await fetch("/api/trpc/conversations.list?input=" + encodeURIComponent(JSON.stringify({ limit: 50, offset: 0 })))
+      const res = await fetch(trpcQuery("conversations.list", { limit: 50, offset: 0 }))
       if (res.ok) {
         const data = await res.json()
-        setConversations(data?.result?.data || [])
+        const result = data?.result?.data?.json ?? data?.result?.data
+        setConversations(result || [])
       }
     } catch {
       // silent fail
@@ -34,32 +52,25 @@ export function useConversations() {
   }, [fetchConversations])
 
   const createConversation = useCallback(async (model: string): Promise<Conversation> => {
-    const res = await fetch("/api/trpc/conversations.create", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ model }),
-    })
-    const data = await res.json()
-    const conv = data?.result?.data
-    setConversations((prev) => [conv, ...prev])
-    return conv
+    const conv = await trpcMutate("conversations.create", { model })
+    // Normalize dates to strings
+    const normalized = {
+      ...conv,
+      createdAt: typeof conv.createdAt === "string" ? conv.createdAt : new Date(conv.createdAt).toISOString(),
+      updatedAt: typeof conv.updatedAt === "string" ? conv.updatedAt : new Date(conv.updatedAt).toISOString(),
+      messageCount: 0,
+    }
+    setConversations((prev) => [normalized, ...prev])
+    return normalized
   }, [])
 
   const deleteConversation = useCallback(async (id: string) => {
-    await fetch("/api/trpc/conversations.delete", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id }),
-    })
+    await trpcMutate("conversations.delete", { id })
     setConversations((prev) => prev.filter((c) => c.id !== id))
   }, [])
 
   const renameConversation = useCallback(async (id: string, title: string) => {
-    await fetch("/api/trpc/conversations.update", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, title }),
-    })
+    await trpcMutate("conversations.update", { id, title })
     setConversations((prev) =>
       prev.map((c) => (c.id === id ? { ...c, title } : c))
     )

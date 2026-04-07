@@ -25,7 +25,7 @@ export default function SettingsPage() {
       await fetch("/api/trpc/user.update", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name }),
+        body: JSON.stringify({ json: { name } }),
       })
       await refreshUser()
       setMessage({ type: "success", text: "Name updated" })
@@ -43,7 +43,7 @@ export default function SettingsPage() {
       await fetch("/api/trpc/user.update", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ kieApiKey: apiKey }),
+        body: JSON.stringify({ json: { kieApiKey: apiKey } }),
       })
       await refreshUser()
       setApiKey("")
@@ -62,7 +62,7 @@ export default function SettingsPage() {
       await fetch("/api/trpc/user.update", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ kieApiKey: "" }),
+        body: JSON.stringify({ json: { kieApiKey: "" } }),
       })
       await refreshUser()
       setMessage({ type: "success", text: "API key removed" })

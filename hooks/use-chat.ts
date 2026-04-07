@@ -21,10 +21,11 @@ export function useChat(conversationId: string | null) {
 
   const loadConversation = useCallback(async (id: string) => {
     try {
-      const res = await fetch(`/api/trpc/conversations.getById?input=${encodeURIComponent(JSON.stringify({ id }))}`)
+      const url = `/api/trpc/conversations.getById?input=${encodeURIComponent(JSON.stringify({ json: { id } }))}`
+      const res = await fetch(url)
       if (res.ok) {
         const data = await res.json()
-        const conv = data?.result?.data
+        const conv = data?.result?.data?.json ?? data?.result?.data
         if (conv) {
           setMessages(conv.messages || [])
           setConversationTitle(conv.title)
@@ -138,6 +139,14 @@ export function useChat(conversationId: string | null) {
           signal: controller.signal,
         })
 
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({}))
+          setError(errData.error || `HTTP ${response.status}`)
+          setIsStreaming(false)
+          setStreamingContent("")
+          return
+        }
+
         if (!response.body) {
           throw new Error("No response body")
         }
@@ -166,7 +175,7 @@ export function useChat(conversationId: string | null) {
               const data = JSON.parse(trimmed.slice(6))
 
               if (data.error) {
-                setError(data.detail || "API error")
+                setError(typeof data.error === "string" ? data.error : data.error.detail || "API error")
                 setIsStreaming(false)
                 setStreamingContent("")
                 return
