@@ -10,18 +10,19 @@ interface StreamingMessageProps {
 
 export function StreamingMessage({ content, model }: StreamingMessageProps) {
   return (
-    <div className="flex justify-start">
-      <div className="max-w-[85%] rounded-2xl bg-app-card px-4 py-3 text-gray-100 md:max-w-[70%]">
-        {model && (
-          <div className="mb-1.5">
-            <span className="rounded-md bg-app-accent/20 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-app-accent">
-              {model}
-            </span>
+    <div>
+      {model && (
+        <div className="mb-1.5 flex items-center gap-2">
+          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-indigo-500/20 text-[10px] font-bold text-indigo-400">
+            AI
           </div>
-        )}
-        <div className="prose prose-invert prose-sm max-w-none">
+          <span className="text-xs font-medium text-gray-400">{model}</span>
+        </div>
+      )}
+      <div className="text-gray-200">
+        <div className="prose prose-invert prose-sm prose-p:leading-relaxed max-w-none">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
-          {content && <span className="cursor-blink" />}
+          <span className="cursor-blink" />
         </div>
       </div>
     </div>

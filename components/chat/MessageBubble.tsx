@@ -17,34 +17,27 @@ export function MessageBubble({ message }: MessageBubbleProps) {
   const isUser = message.role === "user"
 
   return (
-    <div className={`animate-fade-in flex ${isUser ? "justify-end" : "justify-start"}`}>
-      <div
-        className={`max-w-[90%] rounded-2xl px-3 py-2.5 sm:max-w-[75%] sm:px-4 sm:py-3 ${
-          isUser ? "bg-app-user-msg text-white" : "bg-app-card text-gray-100"
-        }`}
-      >
+    <div className={`animate-fade-in ${isUser ? "flex justify-end" : ""}`}>
+      <div className={`${isUser ? "max-w-[85%] sm:max-w-[70%]" : "w-full"}`}>
         {!isUser && message.model && (
-          <div className="mb-1 flex items-center gap-2">
-            <span className="rounded-md bg-app-accent/20 px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wider text-app-accent sm:text-[10px]">
-              {message.model}
-            </span>
+          <div className="mb-1.5 flex items-center gap-2">
+            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-indigo-500/20 text-[10px] font-bold text-indigo-400">
+              AI
+            </div>
+            <span className="text-xs font-medium text-gray-400">{message.model}</span>
           </div>
         )}
-
-        {isUser ? (
-          <div className="whitespace-pre-wrap text-[15px] leading-relaxed sm:text-sm">
+        <div className={`rounded-2xl px-3.5 py-2.5 sm:px-4 sm:py-3 ${
+          isUser
+            ? "bg-indigo-500/15 text-gray-100"
+            : "text-gray-200"
+        }`}>
+          <div className={`prose prose-invert prose-sm max-w-none ${isUser ? "" : "prose-p:leading-relaxed"}`}>
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown>
           </div>
-        ) : (
-          <div className="prose prose-invert prose-sm max-w-none text-[15px] leading-relaxed sm:text-sm">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown>
-          </div>
-        )}
-
+        </div>
         {!isUser && message.tokensUsed && (
-          <div className="mt-1.5 text-[9px] text-app-muted sm:text-[10px]">
-            {message.tokensUsed.toLocaleString()} tokens
-          </div>
+          <div className="mt-1 text-[10px] text-gray-600">{message.tokensUsed.toLocaleString()} tokens</div>
         )}
       </div>
     </div>

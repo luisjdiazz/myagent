@@ -56,37 +56,38 @@ export default function NewChatPage() {
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center px-4">
-      <div className="w-full max-w-2xl">
-        <div className="mb-8 text-center">
-          <h2 className="mb-2 text-2xl font-bold text-white">
-            What can I help you with?
-          </h2>
-          <p className="text-sm text-app-muted">
-            Choose a model and start chatting
-          </p>
-        </div>
+      <div className="w-full max-w-2xl space-y-6">
+        {/* Heading */}
+        <h2 className="text-center text-3xl font-semibold tracking-tight text-white">
+          What can I help with?
+        </h2>
 
+        {/* API key warning */}
         {user && !user.hasApiKey && (
-          <div className="mb-6 rounded-xl border border-yellow-500/30 bg-yellow-500/10 px-4 py-3 text-center text-sm text-yellow-300">
-            You need to configure your KIE.AI API key to start chatting.{" "}
+          <div className="rounded-xl border border-yellow-500/20 bg-yellow-500/5 px-5 py-4 text-center">
+            <p className="text-sm text-yellow-300/90">
+              You need to configure your KIE.AI API key to start chatting.
+            </p>
             <button
               onClick={() => router.push("/settings")}
-              className="font-medium underline hover:text-yellow-200"
+              className="mt-2 text-sm font-medium text-indigo-400 hover:text-indigo-300"
             >
-              Go to Settings
+              Go to Settings &rarr;
             </button>
           </div>
         )}
 
+        {/* Error */}
         {error && (
-          <div className="mb-4 rounded-lg bg-red-500/10 px-4 py-2.5 text-sm text-red-400">
+          <div className="rounded-lg bg-red-500/10 px-4 py-2.5 text-center text-sm text-red-400">
             {error}
           </div>
         )}
 
-        <div className="mb-4 flex justify-center">
+        {/* Model selector */}
+        <div className="flex justify-center">
           {modelsLoading ? (
-            <div className="rounded-lg border border-app-border bg-app-card px-3 py-1.5 text-sm text-app-muted">
+            <div className="rounded-full border border-white/5 bg-white/5 px-4 py-1.5 text-xs text-gray-500">
               Loading models...
             </div>
           ) : (
@@ -94,8 +95,9 @@ export default function NewChatPage() {
           )}
         </div>
 
+        {/* Input */}
         <form onSubmit={handleSubmit}>
-          <div className="relative">
+          <div className="relative rounded-2xl border border-white/10 bg-white/[0.03] transition-colors focus-within:border-indigo-500/40">
             <textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
@@ -107,15 +109,15 @@ export default function NewChatPage() {
               }}
               placeholder="Type your message..."
               rows={3}
-              className="w-full resize-none rounded-xl border border-app-border bg-app-card px-4 py-3 pr-14 text-sm text-white placeholder-app-muted/50 focus:border-app-accent focus:outline-none"
+              className="w-full resize-none bg-transparent px-4 py-3 pr-14 text-sm text-white placeholder-gray-600 focus:outline-none"
             />
             <button
               type="submit"
               disabled={!message.trim() || sending}
-              className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-lg bg-app-accent text-white transition-colors hover:bg-app-accent-hover disabled:opacity-30"
+              className="absolute bottom-3 right-3 flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500 text-white transition-all hover:bg-indigo-400 disabled:opacity-20 disabled:hover:bg-indigo-500"
             >
               {sending ? (
-                <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white border-t-transparent" />
               ) : (
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />

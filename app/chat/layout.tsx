@@ -31,8 +31,8 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
 
   if (loading || !supabaseUser) {
     return (
-      <div className="flex h-screen items-center justify-center bg-app-bg">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-app-accent border-t-transparent" />
+      <div className="flex h-[100dvh] items-center justify-center bg-[#0f0f0f]">
+        <div className="h-6 w-6 animate-spin rounded-full border-2 border-indigo-500 border-t-transparent" />
       </div>
     )
   }
@@ -59,9 +59,9 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
   }
 
   return (
-    <div className="flex h-screen bg-app-bg">
+    <div className="flex h-[100dvh] bg-[#0f0f0f]">
       {/* Desktop sidebar */}
-      <div className="hidden w-64 flex-shrink-0 border-r border-app-border md:block">
+      <aside className="hidden w-[260px] flex-shrink-0 border-r border-white/5 md:flex md:flex-col">
         <ChatSidebar
           conversations={conversations}
           activeId={activeId}
@@ -69,16 +69,16 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
           onDelete={handleDelete}
           onRename={renameConversation}
         />
-      </div>
+      </aside>
 
-      {/* Mobile sidebar overlay */}
+      {/* Mobile sidebar */}
       {sidebarOpen && (
-        <div className="fixed inset-0 z-40 md:hidden">
+        <div className="fixed inset-0 z-50 md:hidden">
           <div
-            className="absolute inset-0 bg-black/50"
+            className="absolute inset-0 bg-black/60 transition-opacity"
             onClick={() => setSidebarOpen(false)}
           />
-          <div className="absolute left-0 top-0 h-full w-72">
+          <aside className="absolute inset-y-0 left-0 w-[280px] animate-slide-in">
             <ChatSidebar
               conversations={conversations}
               activeId={activeId}
@@ -87,38 +87,43 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
               onRename={renameConversation}
               onClose={() => setSidebarOpen(false)}
             />
-          </div>
+          </aside>
         </div>
       )}
 
-      {/* Main content */}
-      <div className="flex flex-1 flex-col overflow-hidden">
-        {/* Top bar */}
-        <div className="flex items-center justify-between border-b border-app-border px-3 py-2 sm:px-4">
+      {/* Main */}
+      <main className="flex flex-1 flex-col overflow-hidden">
+        {/* Header */}
+        <header className="flex h-12 items-center justify-between border-b border-white/5 px-3 sm:px-4">
           <div className="flex items-center gap-2">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="rounded-lg p-2.5 text-app-muted hover:bg-app-card hover:text-white md:hidden"
+              className="rounded-lg p-2 text-gray-500 transition-colors hover:text-white md:hidden"
             >
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
-            <h1 className="text-sm font-semibold text-white">MyAgent</h1>
+            <span className="text-sm font-semibold text-white">MyAgent</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="hidden text-xs text-app-muted sm:inline">{user?.name || supabaseUser.email}</span>
+            <span className="hidden text-xs text-gray-500 sm:block">
+              {user?.name || supabaseUser.email}
+            </span>
             <button
               onClick={logout}
-              className="rounded-lg px-3 py-2 text-xs text-app-muted transition-colors hover:bg-app-card hover:text-white"
+              className="rounded-full p-2 text-gray-500 transition-colors hover:text-white"
+              title="Sign out"
             >
-              Logout
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3-3h-9m9 0l-3-3m3 3l-3 3" />
+              </svg>
             </button>
           </div>
-        </div>
+        </header>
 
         {children}
-      </div>
+      </main>
     </div>
   )
 }

@@ -53,6 +53,7 @@ export default function ConversationPage() {
 
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
+      {/* Chat messages */}
       <ChatArea
         messages={messages}
         streamingContent={streamingContent}
@@ -60,15 +61,19 @@ export default function ConversationPage() {
         currentModel={model}
       />
 
+      {/* Error toast */}
       {error && (
-        <div className="mx-4 mb-2 rounded-lg bg-red-500/10 px-4 py-2 text-sm text-red-400">
-          {error}
+        <div className="mx-auto mb-2 w-full max-w-3xl px-4">
+          <div className="rounded-lg border border-red-500/10 bg-red-500/5 px-4 py-2 text-center text-sm text-red-400">
+            {error}
+          </div>
         </div>
       )}
 
-      <div className="border-t border-app-border px-3 py-2 pb-safe sm:px-4 sm:py-3">
+      {/* Bottom bar */}
+      <div className="border-t border-white/5 px-3 py-2 pb-safe sm:px-4 sm:py-3">
         <div className="mx-auto max-w-3xl">
-          <div className="mb-1.5 flex items-center gap-2 sm:mb-2">
+          <div className="mb-1.5 flex items-center gap-2">
             <ModelSelector models={models} value={model} onChange={setModel} compact />
           </div>
           <MessageInput

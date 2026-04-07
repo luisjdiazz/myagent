@@ -75,88 +75,90 @@ export default function SettingsPage() {
 
   if (loading || !supabaseUser) {
     return (
-      <div className="flex h-screen items-center justify-center bg-app-bg">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-app-accent border-t-transparent" />
+      <div className="flex h-[100dvh] items-center justify-center bg-[#0f0f0f]">
+        <div className="h-6 w-6 animate-spin rounded-full border-2 border-indigo-500 border-t-transparent" />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-app-bg px-4 py-8">
+    <div className="min-h-[100dvh] bg-[#0f0f0f] px-4 py-8">
       <div className="mx-auto max-w-lg">
-        <div className="mb-6 flex items-center gap-3">
+        {/* Header */}
+        <div className="mb-8 flex items-center gap-3">
           <button
             onClick={() => router.push("/chat")}
-            className="rounded-lg p-2 text-app-muted hover:bg-app-card hover:text-white"
+            className="rounded-lg p-2 text-gray-500 transition-colors hover:text-white"
           >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
             </svg>
           </button>
-          <h1 className="text-xl font-bold text-white">Settings</h1>
+          <h1 className="text-lg font-semibold text-white">Settings</h1>
         </div>
 
+        {/* Status message */}
         {message && (
           <div
-            className={`mb-4 rounded-lg px-4 py-2.5 text-sm ${
+            className={`mb-5 rounded-lg px-4 py-2.5 text-sm ${
               message.type === "success"
-                ? "bg-green-500/10 text-green-400"
-                : "bg-red-500/10 text-red-400"
+                ? "border border-green-500/10 bg-green-500/5 text-green-400"
+                : "border border-red-500/10 bg-red-500/5 text-red-400"
             }`}
           >
             {message.text}
           </div>
         )}
 
-        {/* Profile */}
-        <div className="mb-6 rounded-xl border border-app-border bg-app-card p-5">
-          <h2 className="mb-4 text-sm font-semibold text-white">Profile</h2>
+        {/* Profile card */}
+        <div className="mb-5 rounded-2xl border border-white/5 bg-white/[0.02] p-5">
+          <h2 className="mb-4 text-sm font-medium text-white">Profile</h2>
 
           <div className="mb-3">
-            <label className="mb-1 block text-xs text-app-muted">Email</label>
+            <label className="mb-1.5 block text-xs text-gray-500">Email</label>
             <input
               type="email"
               value={supabaseUser.email || ""}
               disabled
-              className="w-full rounded-lg border border-app-border bg-app-bg px-4 py-2.5 text-sm text-app-muted"
+              className="w-full rounded-lg border border-white/5 bg-white/[0.02] px-3.5 py-2.5 text-sm text-gray-500"
             />
           </div>
 
           <div className="mb-4">
-            <label className="mb-1 block text-xs text-app-muted">Name</label>
+            <label className="mb-1.5 block text-xs text-gray-500">Name</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full rounded-lg border border-app-border bg-app-bg px-4 py-2.5 text-sm text-white focus:border-app-accent focus:outline-none"
+              className="w-full rounded-lg border border-white/10 bg-white/5 px-3.5 py-2.5 text-sm text-white transition-colors focus:border-indigo-500/50 focus:outline-none"
             />
           </div>
 
           <button
             onClick={handleSaveName}
             disabled={saving || name === user?.name}
-            className="rounded-lg bg-app-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-app-accent-hover disabled:opacity-50"
+            className="rounded-lg bg-indigo-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-400 disabled:opacity-40"
           >
             Save Name
           </button>
         </div>
 
-        {/* API Key */}
-        <div className="rounded-xl border border-app-border bg-app-card p-5">
-          <h2 className="mb-2 text-sm font-semibold text-white">KIE.AI API Key</h2>
-          <p className="mb-4 text-xs text-app-muted">
+        {/* API Key card */}
+        <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-5">
+          <h2 className="mb-1.5 text-sm font-medium text-white">KIE.AI API Key</h2>
+          <p className="mb-4 text-xs text-gray-500">
             Your API key is required to use the platform. Each user must add their own KIE.AI API key.
           </p>
 
-          <div className="mb-2 flex items-center gap-2">
-            <span className="text-xs text-app-muted">Status:</span>
+          <div className="mb-3 flex items-center gap-2">
+            <span className="text-xs text-gray-500">Status:</span>
             {user?.hasApiKey ? (
-              <span className="rounded-full bg-green-500/20 px-2 py-0.5 text-xs text-green-400">
+              <span className="rounded-full bg-green-500/10 px-2.5 py-0.5 text-xs text-green-400">
                 Configured
               </span>
             ) : (
-              <span className="rounded-full bg-yellow-500/20 px-2 py-0.5 text-xs text-yellow-400">
-                Not Set — Required
+              <span className="rounded-full bg-yellow-500/10 px-2.5 py-0.5 text-xs text-yellow-400">
+                Not Set
               </span>
             )}
           </div>
@@ -167,7 +169,7 @@ export default function SettingsPage() {
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
               placeholder={user?.hasApiKey ? "Enter new key to update..." : "Paste your KIE.AI API key..."}
-              className="w-full rounded-lg border border-app-border bg-app-bg px-4 py-2.5 text-sm text-white placeholder-app-muted/50 focus:border-app-accent focus:outline-none"
+              className="w-full rounded-lg border border-white/10 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-gray-600 transition-colors focus:border-indigo-500/50 focus:outline-none"
             />
           </div>
 
@@ -175,7 +177,7 @@ export default function SettingsPage() {
             <button
               onClick={handleSaveApiKey}
               disabled={saving || !apiKey.trim()}
-              className="rounded-lg bg-app-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-app-accent-hover disabled:opacity-50"
+              className="rounded-lg bg-indigo-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-400 disabled:opacity-40"
             >
               {user?.hasApiKey ? "Update Key" : "Save Key"}
             </button>
@@ -183,7 +185,7 @@ export default function SettingsPage() {
               <button
                 onClick={handleRemoveApiKey}
                 disabled={saving}
-                className="rounded-lg border border-red-500/30 px-4 py-2 text-sm font-medium text-red-400 transition-colors hover:bg-red-500/10 disabled:opacity-50"
+                className="rounded-lg border border-red-500/20 px-4 py-2 text-sm font-medium text-red-400 transition-colors hover:bg-red-500/10 disabled:opacity-40"
               >
                 Remove Key
               </button>
