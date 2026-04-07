@@ -156,3 +156,34 @@ p code {
   padding: 0.125rem 0.375rem;
   border-radius: 0.25rem;
 }
+
+/* Mobile safe areas */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Prevent iOS text zoom on focus */
+@supports (-webkit-touch-callout: none) {
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+}
+
+/* Better touch feedback */
+@media (hover: none) {
+  button:active {
+    opacity: 0.7;
+  }
+}
+
+/* Prevent pull-to-refresh on chat area */
+.overscroll-contain {
+  overscroll-behavior: contain;
+}
+
+/* Images in messages should be responsive */
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+}

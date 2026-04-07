@@ -1,4 +1,4 @@
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import { AuthProvider } from "@/components/auth/AuthProvider"
@@ -13,17 +13,17 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 })
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  themeColor: "#0f0f0f",
+}
+
 export const metadata: Metadata = {
   title: "MyAgent - Multi-Model AI Chat",
   description: "Your multi-model AI chat platform",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-  },
-  themeColor: "#0f0f0f",
-  manifest: undefined,
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",

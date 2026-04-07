@@ -66,9 +66,9 @@ export default function ConversationPage() {
         </div>
       )}
 
-      <div className="border-t border-app-border px-3 py-2 sm:px-4 sm:py-3">
+      <div className="border-t border-app-border px-3 py-2 pb-safe sm:px-4 sm:py-3">
         <div className="mx-auto max-w-3xl">
-          <div className="mb-2 flex items-center gap-2">
+          <div className="mb-1.5 flex items-center gap-2 sm:mb-2">
             <ModelSelector models={models} value={model} onChange={setModel} compact />
           </div>
           <MessageInput
