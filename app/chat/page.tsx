@@ -8,9 +8,10 @@ import { ModelSelector } from "@/components/chat/ModelSelector"
 
 export default function NewChatPage() {
   const { user } = useAuth()
-  const { models } = useModels()
+  const { models, loading: modelsLoading } = useModels()
   const router = useRouter()
   const [message, setMessage] = useState("")
+  const [error, setError] = useState("")
   const [model, setModel] = useState(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("myagent_last_model") || "gemini-2.5-flash"
@@ -25,6 +26,7 @@ export default function NewChatPage() {
     if (!text || sending) return
 
     setSending(true)
+    setError("")
     try {
       const res = await fetch("/api/trpc/conversations.create", {
         method: "POST",
@@ -32,11 +34,22 @@ export default function NewChatPage() {
         body: JSON.stringify({ json: { model } }),
       })
       const data = await res.json()
-      const conv = data?.result?.data?.json ?? data?.result?.data
-      if (conv) {
-        router.push(`/chat/${conv.id}?msg=${encodeURIComponent(text)}`)
+
+      if (data?.error) {
+        setError(data.error.message || "Failed to create conversation")
+        setSending(false)
+        return
       }
-    } catch {
+
+      const conv = data?.result?.data?.json ?? data?.result?.data
+      if (conv?.id) {
+        router.push(`/chat/${conv.id}?msg=${encodeURIComponent(text)}`)
+      } else {
+        setError("Failed to create conversation — no ID returned")
+        setSending(false)
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Network error")
       setSending(false)
     }
   }
@@ -65,8 +78,20 @@ export default function NewChatPage() {
           </div>
         )}
 
+        {error && (
+          <div className="mb-4 rounded-lg bg-red-500/10 px-4 py-2.5 text-sm text-red-400">
+            {error}
+          </div>
+        )}
+
         <div className="mb-4 flex justify-center">
-          <ModelSelector models={models} value={model} onChange={setModel} />
+          {modelsLoading ? (
+            <div className="rounded-lg border border-app-border bg-app-card px-3 py-1.5 text-sm text-app-muted">
+              Loading models...
+            </div>
+          ) : (
+            <ModelSelector models={models} value={model} onChange={setModel} />
+          )}
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -89,9 +114,13 @@ export default function NewChatPage() {
               disabled={!message.trim() || sending}
               className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-lg bg-app-accent text-white transition-colors hover:bg-app-accent-hover disabled:opacity-30"
             >
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
+              {sending ? (
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+              ) : (
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              )}
             </button>
           </div>
         </form>
