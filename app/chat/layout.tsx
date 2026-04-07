@@ -94,11 +94,11 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
       {/* Main content */}
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Top bar */}
-        <div className="flex items-center justify-between border-b border-app-border px-4 py-2">
-          <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between border-b border-app-border px-3 py-2 sm:px-4">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="rounded-lg p-2 text-app-muted hover:bg-app-card hover:text-white md:hidden"
+              className="rounded-lg p-2.5 text-app-muted hover:bg-app-card hover:text-white md:hidden"
             >
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -106,11 +106,11 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
             </button>
             <h1 className="text-sm font-semibold text-white">MyAgent</h1>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-app-muted">{user?.name || supabaseUser.email}</span>
+          <div className="flex items-center gap-2">
+            <span className="hidden text-xs text-app-muted sm:inline">{user?.name || supabaseUser.email}</span>
             <button
               onClick={logout}
-              className="rounded-lg px-3 py-1.5 text-xs text-app-muted transition-colors hover:bg-app-card hover:text-white"
+              className="rounded-lg px-3 py-2 text-xs text-app-muted transition-colors hover:bg-app-card hover:text-white"
             >
               Logout
             </button>

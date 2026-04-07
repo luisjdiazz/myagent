@@ -47,8 +47,8 @@ export default function ConversationPage() {
     }
   }, [searchParams, conversationLoaded, id, model, sendMessage])
 
-  function handleSend(text: string) {
-    sendMessage(text, model)
+  function handleSend(text: string, attachments?: { url: string; type: "image" | "pdf" | "file"; name: string }[]) {
+    sendMessage(text, model, attachments)
   }
 
   return (
@@ -66,7 +66,7 @@ export default function ConversationPage() {
         </div>
       )}
 
-      <div className="border-t border-app-border px-4 py-3">
+      <div className="border-t border-app-border px-3 py-2 sm:px-4 sm:py-3">
         <div className="mx-auto max-w-3xl">
           <div className="mb-2 flex items-center gap-2">
             <ModelSelector models={models} value={model} onChange={setModel} compact />

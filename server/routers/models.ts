@@ -101,6 +101,13 @@ const MODELS: ModelInfo[] = [
     cost: "~$0.04/image",
     status: "stable",
   },
+  {
+    id: "nano-banana",
+    name: "Nano Banana",
+    provider: "KIE.AI",
+    cost: "~$0.001/msg",
+    status: "stable",
+  },
 ]
 
 export const modelsRouter = createTRPCRouter({

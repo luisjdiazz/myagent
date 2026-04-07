@@ -2,6 +2,12 @@
 
 import { useCallback, useRef, useState } from "react"
 
+interface Attachment {
+  url: string
+  type: "image" | "pdf" | "file"
+  name: string
+}
+
 interface Message {
   id: string
   role: string
@@ -38,17 +44,31 @@ export function useChat(conversationId: string | null) {
   }, [])
 
   const sendMessage = useCallback(
-    async (text: string, model?: string) => {
+    async (text: string, model?: string, attachments?: Attachment[]) => {
       if (!conversationId || isStreaming) return
 
       setError(null)
       setIsStreaming(true)
       setStreamingContent("")
 
+      // Build content with attachments
+      let fullContent = text
+      if (attachments && attachments.length > 0) {
+        const parts: string[] = []
+        for (const att of attachments) {
+          if (att.type === "image") {
+            parts.push(`![${att.name}](${att.url})`)
+          } else {
+            parts.push(`[Attached: ${att.name}](${att.url})`)
+          }
+        }
+        fullContent = parts.join("\n") + (text ? "\n\n" + text : "")
+      }
+
       const userMsg: Message = {
         id: `temp-${Date.now()}`,
         role: "user",
-        content: text,
+        content: fullContent,
         model: null,
         tokensUsed: null,
         createdAt: new Date().toISOString(),
@@ -135,7 +155,7 @@ export function useChat(conversationId: string | null) {
         const response = await fetch("/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ conversationId, message: text, model }),
+          body: JSON.stringify({ conversationId, message: fullContent, model }),
           signal: controller.signal,
         })
 
@@ -154,7 +174,7 @@ export function useChat(conversationId: string | null) {
         const reader = response.body.getReader()
         const decoder = new TextDecoder()
         let buffer = ""
-        let fullContent = ""
+        let streamedContent = ""
 
         const CHUNK_TIMEOUT_MS = 60_000
         while (true) {
@@ -182,15 +202,15 @@ export function useChat(conversationId: string | null) {
               }
 
               if (data.token) {
-                fullContent += data.token
-                setStreamingContent(fullContent)
+                streamedContent += data.token
+                setStreamingContent(streamedContent)
               }
 
               if (data.done) {
                 const assistantMsg: Message = {
                   id: data.message_id || `msg-${Date.now()}`,
                   role: "assistant",
-                  content: fullContent,
+                  content: streamedContent,
                   model: model || null,
                   tokensUsed: data.tokens_used ?? null,
                   createdAt: new Date().toISOString(),
