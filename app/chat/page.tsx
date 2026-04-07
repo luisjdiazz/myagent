@@ -56,21 +56,21 @@ export default function NewChatPage() {
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center px-4">
-      <div className="w-full max-w-2xl space-y-6">
+      <div className="w-full max-w-[720px] space-y-6">
         {/* Heading */}
-        <h2 className="text-center text-3xl font-semibold tracking-tight text-white">
+        <h2 className="text-center text-2xl font-medium tracking-tight text-white">
           What can I help with?
         </h2>
 
         {/* API key warning */}
         {user && !user.hasApiKey && (
-          <div className="rounded-xl border border-yellow-500/20 bg-yellow-500/5 px-5 py-4 text-center">
-            <p className="text-sm text-yellow-300/90">
+          <div className="rounded-xl border border-yellow-500/10 bg-yellow-500/[0.03] px-5 py-4 text-center">
+            <p className="text-[13px] text-yellow-400/80">
               You need to configure your KIE.AI API key to start chatting.
             </p>
             <button
               onClick={() => router.push("/settings")}
-              className="mt-2 text-sm font-medium text-indigo-400 hover:text-indigo-300"
+              className="mt-2 text-[13px] font-medium text-indigo-400 transition-colors hover:text-indigo-300"
             >
               Go to Settings &rarr;
             </button>
@@ -79,7 +79,7 @@ export default function NewChatPage() {
 
         {/* Error */}
         {error && (
-          <div className="rounded-lg bg-red-500/10 px-4 py-2.5 text-center text-sm text-red-400">
+          <div className="rounded-xl border border-red-400/[0.06] bg-red-400/[0.04] px-4 py-2.5 text-center text-[13px] text-red-400/80">
             {error}
           </div>
         )}
@@ -87,7 +87,7 @@ export default function NewChatPage() {
         {/* Model selector */}
         <div className="flex justify-center">
           {modelsLoading ? (
-            <div className="rounded-full border border-white/5 bg-white/5 px-4 py-1.5 text-xs text-gray-500">
+            <div className="rounded-full border border-white/[0.06] bg-white/[0.04] px-4 py-1.5 text-[12px] text-zinc-600">
               Loading models...
             </div>
           ) : (
@@ -97,7 +97,7 @@ export default function NewChatPage() {
 
         {/* Input */}
         <form onSubmit={handleSubmit}>
-          <div className="relative rounded-2xl border border-white/10 bg-white/[0.03] transition-colors focus-within:border-indigo-500/40">
+          <div className="relative rounded-2xl border border-white/[0.06] bg-white/[0.03] transition-all duration-200 focus-within:border-indigo-400/30">
             <textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
@@ -109,12 +109,12 @@ export default function NewChatPage() {
               }}
               placeholder="Type your message..."
               rows={3}
-              className="w-full resize-none bg-transparent px-4 py-3 pr-14 text-sm text-white placeholder-gray-600 focus:outline-none"
+              className="w-full resize-none bg-transparent px-4 py-3 pr-14 text-[14px] leading-relaxed text-zinc-100 placeholder-zinc-600 focus:outline-none"
             />
             <button
               type="submit"
               disabled={!message.trim() || sending}
-              className="absolute bottom-3 right-3 flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500 text-white transition-all hover:bg-indigo-400 disabled:opacity-20 disabled:hover:bg-indigo-500"
+              className="absolute bottom-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-indigo-400 text-white transition-all duration-200 hover:bg-indigo-300 disabled:opacity-20 disabled:hover:bg-indigo-400"
             >
               {sending ? (
                 <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white border-t-transparent" />

@@ -28,7 +28,7 @@ export function ChatArea({ messages, streamingContent, isStreaming, currentModel
 
   return (
     <div className="flex-1 overflow-y-auto overscroll-contain">
-      <div className="mx-auto max-w-2xl space-y-4 px-4 py-4 sm:py-6">
+      <div className="mx-auto max-w-[720px] space-y-5 px-4 py-5 sm:py-8">
         {messages.map((msg) => (
           <MessageBubble key={msg.id} message={msg} />
         ))}
@@ -37,9 +37,9 @@ export function ChatArea({ messages, streamingContent, isStreaming, currentModel
         )}
         {isStreaming && !streamingContent && (
           <div className="flex gap-1 py-2">
-            <span className="h-2 w-2 animate-bounce rounded-full bg-gray-500 [animation-delay:0ms]" />
-            <span className="h-2 w-2 animate-bounce rounded-full bg-gray-500 [animation-delay:150ms]" />
-            <span className="h-2 w-2 animate-bounce rounded-full bg-gray-500 [animation-delay:300ms]" />
+            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-zinc-600 [animation-delay:0ms]" />
+            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-zinc-600 [animation-delay:150ms]" />
+            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-zinc-600 [animation-delay:300ms]" />
           </div>
         )}
         <div ref={bottomRef} />

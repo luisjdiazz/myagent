@@ -20,24 +20,24 @@ export function MessageBubble({ message }: MessageBubbleProps) {
     <div className={`animate-fade-in ${isUser ? "flex justify-end" : ""}`}>
       <div className={`${isUser ? "max-w-[85%] sm:max-w-[70%]" : "w-full"}`}>
         {!isUser && message.model && (
-          <div className="mb-1.5 flex items-center gap-2">
-            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-indigo-500/20 text-[10px] font-bold text-indigo-400">
-              AI
-            </div>
-            <span className="text-xs font-medium text-gray-400">{message.model}</span>
+          <div className="mb-1.5 flex items-center gap-1.5">
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-indigo-400" />
+            <span className="text-[11px] font-medium text-zinc-600">{message.model}</span>
           </div>
         )}
-        <div className={`rounded-2xl px-3.5 py-2.5 sm:px-4 sm:py-3 ${
+        <div className={`rounded-2xl ${
           isUser
-            ? "bg-indigo-500/15 text-gray-100"
-            : "text-gray-200"
+            ? "bg-indigo-400/[0.08] px-3.5 py-2.5 sm:px-4 sm:py-3"
+            : ""
         }`}>
-          <div className={`prose prose-invert prose-sm max-w-none ${isUser ? "" : "prose-p:leading-relaxed"}`}>
+          <div className={`prose prose-invert prose-sm max-w-none prose-p:leading-relaxed ${
+            isUser ? "text-zinc-100" : "text-zinc-200"
+          }`}>
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown>
           </div>
         </div>
         {!isUser && message.tokensUsed && (
-          <div className="mt-1 text-[10px] text-gray-600">{message.tokensUsed.toLocaleString()} tokens</div>
+          <div className="mt-1.5 text-[10px] text-zinc-700">{message.tokensUsed.toLocaleString()} tokens</div>
         )}
       </div>
     </div>

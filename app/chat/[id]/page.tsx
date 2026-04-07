@@ -63,16 +63,16 @@ export default function ConversationPage() {
 
       {/* Error toast */}
       {error && (
-        <div className="mx-auto mb-2 w-full max-w-3xl px-4">
-          <div className="rounded-lg border border-red-500/10 bg-red-500/5 px-4 py-2 text-center text-sm text-red-400">
+        <div className="mx-auto mb-2 w-full max-w-[720px] px-4">
+          <div className="rounded-xl border border-red-400/[0.06] bg-red-400/[0.04] px-4 py-2 text-center text-[13px] text-red-400/80">
             {error}
           </div>
         </div>
       )}
 
       {/* Bottom bar */}
-      <div className="border-t border-white/5 px-3 py-2 pb-safe sm:px-4 sm:py-3">
-        <div className="mx-auto max-w-3xl">
+      <div className="border-t border-white/[0.04] bg-[#09090b] px-3 py-2 pb-safe sm:px-4 sm:py-3">
+        <div className="mx-auto max-w-[720px]">
           <div className="mb-1.5 flex items-center gap-2">
             <ModelSelector models={models} value={model} onChange={setModel} compact />
           </div>

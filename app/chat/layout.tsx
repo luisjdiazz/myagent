@@ -31,8 +31,8 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
 
   if (loading || !supabaseUser) {
     return (
-      <div className="flex h-[100dvh] items-center justify-center bg-[#0f0f0f]">
-        <div className="h-6 w-6 animate-spin rounded-full border-2 border-indigo-500 border-t-transparent" />
+      <div className="flex h-[100dvh] items-center justify-center bg-[#09090b]">
+        <div className="h-5 w-5 animate-spin rounded-full border-2 border-indigo-400 border-t-transparent" />
       </div>
     )
   }
@@ -59,9 +59,9 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
   }
 
   return (
-    <div className="flex h-[100dvh] bg-[#0f0f0f]">
+    <div className="flex h-[100dvh] bg-[#09090b]">
       {/* Desktop sidebar */}
-      <aside className="hidden w-[260px] flex-shrink-0 border-r border-white/5 md:flex md:flex-col">
+      <aside className="hidden w-[260px] flex-shrink-0 border-r border-white/[0.04] md:flex md:flex-col">
         <ChatSidebar
           conversations={conversations}
           activeId={activeId}
@@ -94,25 +94,25 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
       {/* Main */}
       <main className="flex flex-1 flex-col overflow-hidden">
         {/* Header */}
-        <header className="flex h-12 items-center justify-between border-b border-white/5 px-3 sm:px-4">
+        <header className="flex h-11 items-center justify-between border-b border-white/[0.04] px-3 sm:px-4">
           <div className="flex items-center gap-2">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="rounded-lg p-2 text-gray-500 transition-colors hover:text-white md:hidden"
+              className="rounded-lg p-2 text-zinc-600 transition-colors hover:text-zinc-400 md:hidden"
             >
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
-            <span className="text-sm font-semibold text-white">MyAgent</span>
+            <span className="text-[13px] font-medium text-zinc-300">MyAgent</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="hidden text-xs text-gray-500 sm:block">
+            <span className="hidden text-[12px] text-zinc-600 sm:block">
               {user?.name || supabaseUser.email}
             </span>
             <button
               onClick={logout}
-              className="rounded-full p-2 text-gray-500 transition-colors hover:text-white"
+              className="rounded-full p-2 text-zinc-600 transition-colors hover:text-zinc-400"
               title="Sign out"
             >
               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
