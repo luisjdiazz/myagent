@@ -2,15 +2,29 @@ import type { StreamChunk } from "@/types"
 
 // ─── Endpoint routing ────────────────────────────────────────────────
 
+// GPT-5.4 reasoning variants share the same base model ID
+function getBaseModel(model: string): string {
+  if (model.startsWith("gpt-5-4-reasoning-")) return "gpt-5-4"
+  return model
+}
+
+function getReasoningEffort(model: string): "low" | "medium" | "high" | null {
+  if (model === "gpt-5-4-reasoning-low") return "low"
+  if (model === "gpt-5-4-reasoning-medium") return "medium"
+  if (model === "gpt-5-4-reasoning-high") return "high"
+  return null
+}
+
 function getEndpointUrl(model: string): string {
-  if (model === "deepseek-chat" || model === "deepseek-reasoner") {
+  const base = getBaseModel(model)
+  if (base === "deepseek-chat" || base === "deepseek-reasoner") {
     return "https://kieai.erweima.ai/api/v1/chat/completions"
   }
-  if (model.startsWith("claude-")) {
+  if (base.startsWith("claude-")) {
     return `https://api.kie.ai/claude/v1/messages`
   }
   // Gemini, GPT, etc.
-  return `https://api.kie.ai/${model}/v1/chat/completions`
+  return `https://api.kie.ai/${base}/v1/chat/completions`
 }
 
 function isClaudeModel(model: string): boolean {
@@ -131,10 +145,11 @@ async function* streamOpenAICompatible(
       Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model,
+      model: getBaseModel(model),
       messages: messagesPayload,
       stream: true,
       stream_options: { include_usage: true },
+      ...(getReasoningEffort(model) && { reasoning_effort: getReasoningEffort(model) }),
     }),
   })
 

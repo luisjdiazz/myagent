@@ -4,6 +4,34 @@ import type { ModelInfo } from "@/types"
 const MODELS: ModelInfo[] = [
   // OpenAI
   {
+    id: "gpt-5-4",
+    name: "GPT-5.4",
+    provider: "OpenAI",
+    cost: "~$0.06/msg",
+    status: "stable",
+  },
+  {
+    id: "gpt-5-4-reasoning-low",
+    name: "GPT-5.4 Reasoning (Low)",
+    provider: "OpenAI",
+    cost: "~$0.08/msg",
+    status: "stable",
+  },
+  {
+    id: "gpt-5-4-reasoning-medium",
+    name: "GPT-5.4 Reasoning (Medium)",
+    provider: "OpenAI",
+    cost: "~$0.12/msg",
+    status: "stable",
+  },
+  {
+    id: "gpt-5-4-reasoning-high",
+    name: "GPT-5.4 Reasoning (High)",
+    provider: "OpenAI",
+    cost: "~$0.18/msg",
+    status: "stable",
+  },
+  {
     id: "gpt-5-2",
     name: "GPT-5.2",
     provider: "OpenAI",

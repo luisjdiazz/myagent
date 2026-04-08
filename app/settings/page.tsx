@@ -146,8 +146,20 @@ export default function SettingsPage() {
         {/* API Key card */}
         <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5">
           <h2 className="mb-1.5 text-[14px] font-medium text-white">KIE.AI API Key</h2>
+          <p className="mb-2 text-[12px] text-zinc-600">
+            Each user needs their own KIE.AI API key to use the platform.
+          </p>
           <p className="mb-4 text-[12px] text-zinc-600">
-            Your API key is required to use the platform. Each user must add their own KIE.AI API key.
+            Don&apos;t have a key?{" "}
+            <a
+              href="https://kie.ai?ref=6b535629e76d411688f169e9ffd2dc2a"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-indigo-400 hover:text-indigo-300 transition-colors"
+            >
+              Create your KIE.AI account →
+            </a>
+            {" "}then generate an API key from your dashboard.
           </p>
 
           <div className="mb-3 flex items-center gap-2">

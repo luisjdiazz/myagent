@@ -84,14 +84,25 @@ export default function NewChatPage() {
         {user && !user.hasApiKey && (
           <div className="rounded-xl border border-yellow-500/10 bg-yellow-500/[0.03] px-5 py-4 text-center">
             <p className="text-[13px] text-yellow-400/80">
-              You need to configure your KIE.AI API key to start chatting.
+              You need a KIE.AI API key to start chatting.
             </p>
-            <button
-              onClick={() => router.push("/settings")}
-              className="mt-2 text-[13px] font-medium text-indigo-400 transition-colors hover:text-indigo-300"
-            >
-              Go to Settings &rarr;
-            </button>
+            <div className="mt-1.5">
+              <a
+                href="https://kie.ai?ref=6b535629e76d411688f169e9ffd2dc2a"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block text-[13px] text-indigo-400 hover:text-indigo-300"
+              >
+                Create your KIE.AI account →
+              </a>
+              <span className="mx-2 text-zinc-700">|</span>
+              <button
+                onClick={() => router.push("/settings")}
+                className="text-[13px] text-indigo-400 hover:text-indigo-300"
+              >
+                Add your API key
+              </button>
+            </div>
           </div>
         )}
 

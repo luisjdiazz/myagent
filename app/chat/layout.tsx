@@ -68,6 +68,7 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
           onNewChat={handleNewChat}
           onDelete={handleDelete}
           onRename={renameConversation}
+          userEmail={supabaseUser.email}
         />
       </aside>
 
@@ -86,6 +87,7 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
               onDelete={handleDelete}
               onRename={renameConversation}
               onClose={() => setSidebarOpen(false)}
+              userEmail={supabaseUser.email}
             />
           </aside>
         </div>
